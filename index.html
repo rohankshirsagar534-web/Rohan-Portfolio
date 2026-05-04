@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rohan Kshirsagar — Filmmaker & VFX Artist</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+/* ============================================================
+   RESET & BASE
+============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+    background: #1E1E1E;
+    color: #fff;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 400;
+    overflow-x: hidden;
+    cursor: none;
+}
+@media (max-width: 768px) { body { cursor: auto; } }
+
+/* ============================================================
+   CUSTOM CURSOR
+============================================================ */
+.cursor-dot {
+    position: fixed; width: 8px; height: 8px;
+    background: #FF6B35; border-radius: 50%;
+    pointer-events: none; z-index: 10000;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s, opacity 0.3s;
+}
+.cursor-ring {
+    position: fixed; width: 38px; height: 38px;
+    border: 1.5px solid rgba(255,107,53,0.5); border-radius: 50%;
+    pointer-events: none; z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: width 0.35s cubic-bezier(.23,1,.32,1),
+                height 0.35s cubic-bezier(.23,1,.32,1),
+                border-color 0.3s;
+}
+.cursor-ring.hovered { width: 60px; height: 60px; border-color: #FF6B35; }
+@media (max-width: 768px) { .cursor-dot, .cursor-ring { display: none; } }
+
+/* ============================================================
+   GRAIN OVERLAY
+============================================================ */
+body::after {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    opacity: 0.022; pointer-events: none; z-index: 9997;
+}
+
+/* ============================================================
+   NAVIGATION
+============================================================ */
+nav {
+    position: fixed; top: 0; left: 0; width: 100%;
+    padding: 1.6rem 5%;
+    display: flex; align-items: center; justify-content: space-between;
+    z-index: 1000;
+    transition: background 0.5s, backdrop-filter 0.5s, border-color 0.5s;
+    border-bottom: 1px solid transparent;
+}
+nav.scrolled {
+    background: rgba(18,18,18,0.88);
+    backdrop-filter: blur(18px) saturate(160%);
+    border-color: rgba(255,255,255,0.05);
+}
+.nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.9rem; letter-spacing: 3px;
+    color: #fff; text-decoration: none;
+}
+.nav-logo span { color: #FF6B35; }
+.nav-links { display: flex; gap: 2.8rem; list-style: none; }
+.nav-links a {
+    color: rgba(255,255,255,0.65); text-decoration: none;
+    font-size: 0.72rem; letter-spacing: 3px; text-transform: uppercase;
+    font-weight: 600;
+    transition: color 0.3s;
+    position: relative;
+}
+.nav-links a::after {
+    content: ''; position: absolute;
+    bottom: -4px; left: 0;
+    width: 0; height: 1.5px;
+    background: #FF6B35;
+    transition: width 0.35s cubic-bezier(.23,1,.32,1);
+}
+.nav-links a:hover { color: #fff; }
+.nav-links a:hover::after { width: 100%; }
+
+.nav-toggle {
+    display: none; flex-direction: column; gap: 5px;
+    cursor: pointer; z-index: 1100;
+}
+.nav-toggle span {
+    display: block; width: 24px; height: 2px;
+    background: #fff;
+    transition: transform 0.35s, opacity 0.35s;
+}
+.nav-toggle.open span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+.nav-toggle.open span:nth-child(2) { opacity: 0; }
+.nav-toggle.open span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+/* ============================================================
+   HERO
+============================================================ */
+#hero {
+    height: 100vh; min-height: 700px;
+    display: flex; align-items: center;
+    padding: 0 5%; position: relative; overflow: hidden;
+}
+.hero-bg {
+    position: absolute; inset: 0;
+    background:
+        radial-gradient(ellipse at 72% 48%, rgba(255,107,53,0.07) 0%, transparent 55%),
+        radial-gradient(ellipse at 20% 85%, rgba(255,107,53,0.04) 0%, transparent 45%),
+        #1E1E1E;
+    will-change: transform;
+}
+.hero-scanlines {
+    position: absolute; inset: 0; z-index: 1; pointer-events: none;
+    background: repeating-linear-gradient(
+        0deg, transparent, transparent 3px,
+        rgba(0,0,0,0.12) 3px, rgba(0,0,0,0.12) 4px
+    );
+}
+.hero-content {
+    position: relative; z-index: 2;
+    flex: 1; max-width: 55%;
+    padding-top: 2rem;
+}
+.hero-pretitle {
+    display: flex; align-items: center; gap: 1rem;
+    margin-bottom: 1.6rem;
+    opacity: 0; animation: fadeUp 0.9s ease forwards 0.15s;
+}
+.hero-pretitle::before {
+    content: ''; width: 38px; height: 1.5px; background: #FF6B35;
+}
+.hero-pretitle span {
+    font-size: 0.68rem; letter-spacing: 5px;
+    text-transform: uppercase; color: #FF6B35; font-weight: 600;
+}
+h1.hero-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(4.5rem, 9vw, 9rem);
+    line-height: 0.88; letter-spacing: 4px; color: #fff;
+    opacity: 0; animation: fadeUp 0.9s ease forwards 0.35s;
+}
+.hero-role {
+    font-size: clamp(0.82rem, 1.3vw, 1rem);
+    color: #FF6B35; letter-spacing: 3.5px;
+    text-transform: uppercase; font-weight: 600;
+    margin-top: 1rem;
+    opacity: 0; animation: fadeUp 0.9s ease forwards 0.55s;
+}
+.hero-sub {
+    font-size: clamp(0.78rem, 1.1vw, 0.92rem);
+    color: rgba(217,217,217,0.65); font-weight: 300;
+    margin-top: 0.4rem; letter-spacing: 0.5px;
+    opacity: 0; animation: fadeUp 0.9s ease forwards 0.65s;
+}
+.hero-tagline {
+    font-size: clamp(0.95rem, 1.35vw, 1.1rem);
+    color: rgba(255,255,255,0.6);
+    font-style: italic; font-weight: 300;
+    margin-top: 1.8rem; line-height: 1.7; max-width: 460px;
+    border-left: 2px solid #FF6B35; padding-left: 1.3rem;
+    opacity: 0; animation: fadeUp 0.9s ease forwards 0.8s;
+}
+.hero-buttons {
+    display: flex; gap: 1.2rem; flex-wrap: wrap;
+    margin-top: 2.8rem;
+    opacity: 0; animation: fadeUp 0.9s ease forwards 1s;
+}
+
+/* Glossy orange button */
+.btn-primary {
+    display: inline-flex; align-items: center; gap: 0.6rem;
+    padding: 0.9rem 2.4rem;
+    background: linear-gradient(180deg, #ff8a5a 0%, #FF6B35 45%, #e05a25 100%);
+    color: #fff; font-family: 'Outfit', sans-serif;
+    font-size: 0.78rem; font-weight: 700;
+    letter-spacing: 2.5px; text-transform: uppercase;
+    text-decoration: none; border: none; border-radius: 4px;
+    box-shadow: 0 4px 24px rgba(255,107,53,0.4),
+                0 0 0 1px rgba(255,107,53,0.25),
+                inset 0 1px 0 rgba(255,255,255,0.15);
+    cursor: pointer;
+    transition: transform 0.3s cubic-bezier(.23,1,.32,1),
+                box-shadow 0.3s ease;
+}
+.btn-primary:hover {
+    transform: translateY(-2px) scale(1.03);
+    box-shadow: 0 10px 36px rgba(255,107,53,0.55),
+                0 0 0 1px rgba(255,107,53,0.45),
+                inset 0 1px 0 rgba(255,255,255,0.15);
+}
+.btn-secondary {
+    display: inline-flex; align-items: center; gap: 0.6rem;
+    padding: 0.9rem 2.4rem;
+    background: transparent;
+    color: rgba(255,255,255,0.85); font-family: 'Outfit', sans-serif;
+    font-size: 0.78rem; font-weight: 600;
+    letter-spacing: 2.5px; text-transform: uppercase;
+    text-decoration: none; border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 4px; cursor: pointer;
+    transition: transform 0.3s cubic-bezier(.23,1,.32,1),
+                border-color 0.3s, background 0.3s, color 0.3s;
+}
+.btn-secondary:hover {
+    transform: translateY(-2px) scale(1.03);
+    border-color: rgba(255,107,53,0.6);
+    background: rgba(255,107,53,0.07);
+    color: #fff;
+}
+
+.hero-3d {
+    position: relative; z-index: 2;
+    flex: 0 0 42%;
+    display: flex; justify-content: center; align-items: center;
+    opacity: 0; animation: fadeIn 2s ease forwards 0.5s;
+}
+#lensCanvas {
+    max-width: 100%; max-height: 440px;
+    filter: drop-shadow(0 0 50px rgba(255,107,53,0.12));
+}
+
+.hero-scroll-indicator {
+    position: absolute; bottom: 2.8rem; left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    display: flex; flex-direction: column; align-items: center; gap: 0.6rem;
+    opacity: 0; animation: fadeIn 1s ease forwards 1.6s;
+}
+.hero-scroll-indicator span {
+    font-size: 0.62rem; letter-spacing: 4px;
+    text-transform: uppercase; color: rgba(255,255,255,0.3);
+    writing-mode: vertical-lr; transform: rotate(180deg);
+}
+.scroll-bar {
+    width: 1px; height: 55px;
+    background: linear-gradient(to bottom, #FF6B35, transparent);
+    animation: scrollAnim 2.2s ease-in-out infinite;
+}
+@keyframes scrollAnim {
+    0%   { transform: scaleY(1); opacity: 0.5; transform-origin: top; }
+    50%  { transform: scaleY(1.1); opacity: 1; }
+    100% { transform: scaleY(1); opacity: 0.5; }
+}
+
+/* ============================================================
+   SHARED SECTION STYLES
+============================================================ */
+section { padding: 8rem 5%; }
+.section-eyebrow {
+    display: inline-flex; align-items: center; gap: 0.9rem;
+    margin-bottom: 0.8rem;
+}
+.section-eyebrow::before {
+    content: ''; width: 32px; height: 1.5px; background: #FF6B35;
+}
+.section-eyebrow span {
+    font-size: 0.68rem; letter-spacing: 5px;
+    text-transform: uppercase; color: #FF6B35; font-weight: 700;
+}
+.section-heading {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.8rem, 5.5vw, 5rem);
+    line-height: 0.95; letter-spacing: 2px; color: #fff;
+    margin-bottom: 4.5rem;
+}
+
+/* ============================================================
+   WORK SECTION
+============================================================ */
+#work { background: #191919; }
+.work-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.4rem;
+}
+.project-card {
+    position: relative; border-radius: 6px;
+    overflow: hidden; cursor: pointer;
+    transition: box-shadow 0.45s cubic-bezier(.23,1,.32,1),
+                transform 0.45s cubic-bezier(.23,1,.32,1);
+}
+/* Spanning cards for cinematic grid */
+.project-card:nth-child(1) { grid-column: span 2; min-height: 340px; }
+.project-card:nth-child(4) { grid-column: span 2; min-height: 290px; }
+.project-card:not(:nth-child(1)):not(:nth-child(4)) { aspect-ratio: 4/3; }
+
+.card-thumb {
+    position: absolute; inset: 0;
+    transition: transform 0.7s cubic-bezier(.23,1,.32,1);
+}
+.project-card:hover .card-thumb { transform: scale(1.07); }
+.project-card:hover {
+    box-shadow: 0 0 0 1.5px rgba(255,107,53,0.55),
+                0 16px 48px rgba(0,0,0,0.7);
+}
+
+.card-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top,
+        rgba(0,0,0,0.92) 0%,
+        rgba(0,0,0,0.25) 55%,
+        rgba(0,0,0,0.05) 100%);
+    transition: background 0.45s;
+}
+.project-card:hover .card-overlay {
+    background: linear-gradient(to top,
+        rgba(0,0,0,0.96) 0%,
+        rgba(0,0,0,0.4) 55%,
+        rgba(0,0,0,0.1) 100%);
+}
+
+.card-body {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    padding: 1.8rem;
+    transform: translateY(5px);
+    transition: transform 0.45s cubic-bezier(.23,1,.32,1);
+}
+.project-card:hover .card-body { transform: translateY(0); }
+.card-cat {
+    font-size: 0.62rem; letter-spacing: 3.5px;
+    text-transform: uppercase; color: #FF6B35;
+    font-weight: 700; margin-bottom: 0.4rem;
+}
+.card-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem; letter-spacing: 2px;
+    color: #fff; margin-bottom: 0.5rem;
+}
+.card-desc {
+    font-size: 0.8rem; color: rgba(255,255,255,0.55);
+    font-weight: 300; line-height: 1.65; max-width: 340px;
+    opacity: 0; transform: translateY(10px);
+    transition: opacity 0.4s 0.05s, transform 0.4s 0.05s;
+}
+.project-card:hover .card-desc { opacity: 1; transform: translateY(0); }
+
+.card-link {
+    position: absolute; top: 1.5rem; right: 1.5rem;
+    width: 38px; height: 38px;
+    border: 1px solid rgba(255,255,255,0.15); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: rgba(255,255,255,0.7); font-size: 0.85rem;
+    opacity: 0; transform: scale(0.7);
+    transition: opacity 0.4s, transform 0.4s, border-color 0.3s, background 0.3s;
+}
+.project-card:hover .card-link {
+    opacity: 1; transform: scale(1);
+    border-color: #FF6B35;
+    background: rgba(255,107,53,0.12);
+}
+
+/* Card gradient themes */
+.p1 { background: linear-gradient(145deg,#08111f 0%,#0e2040 60%,#04090f 100%); }
+.p2 { background: linear-gradient(145deg,#071616 0%,#0b2b2b 60%,#030909 100%); }
+.p3 { background: linear-gradient(145deg,#160808 0%,#2e1010 60%,#090303 100%); }
+.p4 { background: linear-gradient(145deg,#0a0a18 0%,#151530 60%,#050508 100%); }
+.p5 { background: linear-gradient(145deg,#180e00 0%,#2e1c00 60%,#0c0600 100%); }
+.p6 { background: linear-gradient(145deg,#080818 0%,#101028 60%,#040408 100%); }
+.p1::before { content:''; position:absolute; inset:0; background: radial-gradient(circle at 65% 38%, rgba(80,130,255,0.13), transparent 60%); }
+.p2::before { content:''; position:absolute; inset:0; background: radial-gradient(circle at 35% 55%, rgba(40,190,190,0.1), transparent 60%); }
+.p3::before { content:''; position:absolute; inset:0; background: radial-gradient(circle at 60% 48%, rgba(255,70,70,0.12), transparent 60%); }
+.p4::before { content:''; position:absolute; inset:0; background: radial-gradient(circle at 50% 40%, rgba(140,90,255,0.1), transparent 60%); }
+.p5::before { content:''; position:absolute; inset:0; background: radial-gradient(circle at 42% 52%, rgba(255,107,53,0.16), transparent 60%); }
+.p6::before { content:''; position:absolute; inset:0; background: radial-gradient(circle at 58% 36%, rgba(70,110,255,0.11), transparent 60%); }
+
+/* ============================================================
+   ABOUT SECTION
+============================================================ */
+#about {
+    display: grid; grid-template-columns: 1.1fr 0.9fr;
+    gap: 7rem; align-items: center;
+}
+.about-text p {
+    font-size: 0.98rem; color: rgba(255,255,255,0.65);
+    line-height: 1.95; font-weight: 300; margin-bottom: 1.3rem;
+}
+.about-text p strong { color: #fff; font-weight: 600; }
+.about-stats {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 1.6rem; margin-top: 2.8rem;
+}
+.stat-box { border-left: 2px solid #FF6B35; padding-left: 1.3rem; }
+.stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.8rem; color: #FF6B35; line-height: 1;
+}
+.stat-label {
+    font-size: 0.68rem; letter-spacing: 2.5px;
+    text-transform: uppercase; color: rgba(217,217,217,0.7);
+    font-weight: 600; margin-top: 0.3rem;
+}
+.skills-column { display: flex; flex-direction: column; gap: 1.4rem; }
+.skill-row {}
+.skill-meta {
+    display: flex; justify-content: space-between;
+    margin-bottom: 0.55rem;
+}
+.skill-name {
+    font-size: 0.72rem; letter-spacing: 2.5px;
+    text-transform: uppercase; color: rgba(255,255,255,0.7);
+    font-weight: 600;
+}
+.skill-pct { font-size: 0.72rem; color: #FF6B35; font-weight: 700; }
+.skill-track {
+    height: 2px; background: rgba(255,255,255,0.08);
+    border-radius: 2px; overflow: hidden;
+}
+.skill-fill {
+    height: 100%; width: 0;
+    background: linear-gradient(90deg, #FF6B35, #ff9e72);
+    border-radius: 2px;
+    transition: width 1.6s cubic-bezier(.23,1,.32,1);
+}
+
+/* ============================================================
+   SERVICES SECTION
+============================================================ */
+#services { background: #191919; }
+.services-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 1.4rem;
+}
+.service-card {
+    padding: 2.8rem 2rem;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 8px;
+    background: rgba(255,255,255,0.02);
+    position: relative; overflow: hidden;
+    transition: border-color 0.4s, background 0.4s, transform 0.4s cubic-bezier(.23,1,.32,1);
+}
+.service-card::before {
+    content: ''; position: absolute;
+    top: 0; left: 0; width: 100%; height: 2px;
+    background: #FF6B35;
+    transform: scaleX(0); transform-origin: left;
+    transition: transform 0.45s cubic-bezier(.23,1,.32,1);
+}
+.service-card::after {
+    content: ''; position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 0%, rgba(255,107,53,0.06), transparent 70%);
+    opacity: 0; transition: opacity 0.4s;
+}
+.service-card:hover {
+    border-color: rgba(255,107,53,0.2);
+    background: rgba(255,107,53,0.03);
+    transform: translateY(-5px);
+}
+.service-card:hover::before { transform: scaleX(1); }
+.service-card:hover::after { opacity: 1; }
+.service-icon {
+    font-size: 2.2rem; margin-bottom: 1.4rem;
+    display: block; position: relative; z-index: 1;
+}
+.service-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.5rem; letter-spacing: 2px;
+    color: #fff; margin-bottom: 0.9rem;
+    position: relative; z-index: 1;
+}
+.service-desc {
+    font-size: 0.82rem; color: rgba(255,255,255,0.45);
+    line-height: 1.75; font-weight: 300;
+    position: relative; z-index: 1;
+}
+
+/* ============================================================
+   CONTACT SECTION
+============================================================ */
+#contact {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 7rem; align-items: start;
+}
+.contact-headline { margin-bottom: 1rem; }
+.contact-intro {
+    font-size: 0.95rem; color: rgba(255,255,255,0.55);
+    line-height: 1.85; font-weight: 300;
+    margin-bottom: 2.8rem; max-width: 380px;
+}
+.contact-items { display: flex; flex-direction: column; gap: 1.3rem; margin-bottom: 2.8rem; }
+.contact-row { display: flex; align-items: center; gap: 1.1rem; }
+.contact-icon {
+    width: 42px; height: 42px; flex-shrink: 0;
+    border: 1px solid rgba(255,107,53,0.28); border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.05rem; color: #FF6B35;
+    background: rgba(255,107,53,0.05);
+}
+.contact-detail {
+    font-size: 0.9rem; color: rgba(217,217,217,0.85); font-weight: 400;
+}
+.contact-detail a {
+    color: rgba(217,217,217,0.85); text-decoration: none;
+    transition: color 0.3s;
+}
+.contact-detail a:hover { color: #FF6B35; }
+.social-row { display: flex; gap: 0.9rem; }
+.social-btn {
+    width: 44px; height: 44px;
+    border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    color: rgba(255,255,255,0.55); text-decoration: none;
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.5px;
+    font-family: 'Bebas Neue', sans-serif;
+    transition: border-color 0.3s, color 0.3s, background 0.3s;
+}
+.social-btn:hover {
+    border-color: #FF6B35;
+    color: #FF6B35;
+    background: rgba(255,107,53,0.08);
+}
+
+/* Contact form */
+.contact-form { display: flex; flex-direction: column; gap: 1.3rem; }
+.field { display: flex; flex-direction: column; gap: 0.5rem; }
+.field label {
+    font-size: 0.66rem; letter-spacing: 3px;
+    text-transform: uppercase; color: rgba(255,255,255,0.4);
+    font-weight: 700;
+}
+.field input, .field textarea {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 4px; padding: 1rem 1.2rem;
+    color: #fff; font-family: 'Outfit', sans-serif;
+    font-size: 0.9rem; font-weight: 400;
+    transition: border-color 0.35s, background 0.35s;
+    resize: none;
+}
+.field input::placeholder, .field textarea::placeholder {
+    color: rgba(255,255,255,0.2);
+}
+.field input:focus, .field textarea:focus {
+    outline: none;
+    border-color: rgba(255,107,53,0.45);
+    background: rgba(255,255,255,0.05);
+}
+.field textarea { height: 148px; }
+.form-feedback {
+    display: none; padding: 1rem 1.4rem;
+    background: rgba(255,107,53,0.08);
+    border: 1px solid rgba(255,107,53,0.25);
+    border-radius: 4px;
+    color: #FF6B35; font-size: 0.85rem; text-align: center;
+}
+
+/* ============================================================
+   FOOTER
+============================================================ */
+footer {
+    padding: 2.5rem 5%;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 1rem;
+}
+footer p { font-size: 0.75rem; color: rgba(255,255,255,0.25); }
+footer span { color: #FF6B35; }
+
+/* ============================================================
+   ANIMATIONS
+============================================================ */
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(28px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+.reveal {
+    opacity: 0; transform: translateY(35px);
+    transition: opacity 0.85s cubic-bezier(.23,1,.32,1),
+                transform 0.85s cubic-bezier(.23,1,.32,1);
+}
+.reveal.in-view { opacity: 1; transform: translateY(0); }
+.d1 { transition-delay: 0.1s; }
+.d2 { transition-delay: 0.2s; }
+.d3 { transition-delay: 0.3s; }
+.d4 { transition-delay: 0.4s; }
+
+/* ============================================================
+   RESPONSIVE
+============================================================ */
+@media (max-width: 1100px) {
+    .services-grid { grid-template-columns: repeat(2, 1fr); }
+    #about { grid-template-columns: 1fr; gap: 4rem; }
+    #contact { grid-template-columns: 1fr; gap: 4rem; }
+}
+@media (max-width: 900px) {
+    .work-grid { grid-template-columns: repeat(2, 1fr); }
+    .project-card:nth-child(1),
+    .project-card:nth-child(4) { grid-column: span 1; min-height: 260px; }
+}
+@media (max-width: 768px) {
+    #hero { flex-direction: column; justify-content: center; padding-top: 90px; gap: 0; }
+    .hero-content { max-width: 100%; }
+    .hero-3d { display: none; }
+    .hero-tagline { max-width: 100%; }
+    .hero-scroll-indicator { display: none; }
+    .work-grid { grid-template-columns: 1fr; }
+    .project-card:nth-child(1),
+    .project-card:nth-child(4) { min-height: 230px; }
+    .services-grid { grid-template-columns: 1fr; }
+    .about-stats { grid-template-columns: 1fr 1fr; }
+    nav { padding: 1.2rem 5%; }
+    .nav-links {
+        display: none; flex-direction: column;
+        position: fixed; top: 0; right: 0;
+        height: 100vh; width: 72%;
+        background: rgba(12,12,12,0.97);
+        backdrop-filter: blur(20px);
+        padding: 7rem 3.5rem 3rem;
+        gap: 2.2rem; z-index: 1050;
+    }
+    .nav-links.open { display: flex; }
+    .nav-links a { font-size: 1rem; letter-spacing: 4px; }
+    .nav-toggle { display: flex; }
+    footer { flex-direction: column; text-align: center; }
+}
+    </style>
+</head>
+<body>
+
+<!-- Custom cursor -->
+<div class="cursor-dot" id="cursorDot"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- ==================== NAV ==================== -->
+<nav id="navbar">
+    <a href="#" class="nav-logo">R<span>K</span></a>
+    <ul class="nav-links" id="navLinks">
+        <li><a href="#work">Work</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#contact">Contact</a></li>
+    </ul>
+    <div class="nav-toggle" id="navToggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+    </div>
+</nav>
+
+<!-- ==================== HERO ==================== -->
+<section id="hero">
+    <div class="hero-bg" id="heroBg"></div>
+    <div class="hero-scanlines"></div>
+
+    <div class="hero-content">
+        <div class="hero-pretitle"><span>Portfolio&nbsp;&nbsp;2025</span></div>
+        <h1 class="hero-name">Rohan<br>Kshirsagar</h1>
+        <p class="hero-role">Filmmaker &bull; Video Editor &bull; VFX Artist</p>
+        <p class="hero-sub">3D &amp; 2D Artist specializing in cinematic visuals and storytelling</p>
+        <p class="hero-tagline">I create cinematic visuals, motion, and stories that capture attention.</p>
+        <div class="hero-buttons">
+            <a href="#work" class="btn-primary">View Work ↓</a>
+            <a href="#contact" class="btn-secondary">Contact Me →</a>
+        </div>
+    </div>
+
+    <div class="hero-3d">
+        <canvas id="lensCanvas" width="440" height="440"></canvas>
+    </div>
+
+    <div class="hero-scroll-indicator">
+        <div class="scroll-bar"></div>
+        <span>Scroll</span>
+    </div>
+</section>
+
+<!-- ==================== WORK ==================== -->
+<section id="work">
+    <div class="section-eyebrow reveal"><span>Selected Work</span></div>
+    <h2 class="section-heading reveal">Featured<br>Projects</h2>
+
+    <div class="work-grid">
+        <div class="project-card reveal">
+            <div class="card-thumb p1"></div>
+            <div class="card-overlay"></div>
+            <div class="card-body">
+                <div class="card-cat">Cinematic Short Film</div>
+                <div class="card-title">Neon Reverie</div>
+                <div class="card-desc">A neo-noir visual narrative exploring the quiet hours of a neon-lit city — shot, directed, and edited with documentary intimacy.</div>
+            </div>
+            <div class="card-link">↗</div>
+        </div>
+
+        <div class="project-card reveal d1">
+            <div class="card-thumb p2"></div>
+            <div class="card-overlay"></div>
+            <div class="card-body">
+                <div class="card-cat">VFX Showreel</div>
+                <div class="card-title">Abstract Motion</div>
+                <div class="card-desc">A motion reel showcasing particle simulations, fluid dynamics, and high-end compositing work.</div>
+            </div>
+            <div class="card-link">↗</div>
+        </div>
+
+        <div class="project-card reveal d2">
+            <div class="card-thumb p3"></div>
+            <div class="card-overlay"></div>
+            <div class="card-body">
+                <div class="card-cat">Commercial Edit</div>
+                <div class="card-title">Brand Ignition</div>
+                <div class="card-desc">High-impact brand film with kinetic typography, professional color grading, and meticulous sound design.</div>
+            </div>
+            <div class="card-link">↗</div>
+        </div>
+
+        <div class="project-card reveal d1">
+            <div class="card-thumb p4"></div>
+            <div class="card-overlay"></div>
+            <div class="card-body">
+                <div class="card-cat">Documentary Edit</div>
+                <div class="card-title">Depth of Field</div>
+                <div class="card-desc">An intimate documentary portrait capturing the emotional weight of forgotten places and overlooked stories.</div>
+            </div>
+            <div class="card-link">↗</div>
+        </div>
+
+        <div class="project-card reveal d2">
+            <div class="card-thumb p5"></div>
+            <div class="card-overlay"></div>
+            <div class="card-body">
+                <div class="card-cat">3D Animation</div>
+                <div class="card-title">Fracture</div>
+                <div class="card-desc">Stylized 3D short featuring destructive simulations, procedural environments, and dynamic lighting.</div>
+            </div>
+            <div class="card-link">↗</div>
+        </div>
+
+        <div class="project-card reveal d3">
+            <div class="card-thumb p6"></div>
+            <div class="card-overlay"></div>
+            <div class="card-body">
+                <div class="card-cat">Music Video</div>
+                <div class="card-title">Urban Chronicles</div>
+                <div class="card-desc">Rhythm-cut music video blending street photography, motion blur, and VFX compositing into a seamless visual experience.</div>
+            </div>
+            <div class="card-link">↗</div>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== ABOUT ==================== -->
+<section id="about">
+    <div class="about-text">
+        <div class="section-eyebrow reveal"><span>About</span></div>
+        <h2 class="section-heading reveal">Crafting Stories<br>Frame by Frame</h2>
+        <div class="reveal">
+            <p>Hi, I'm <strong>Rohan Kshirsagar</strong> — a filmmaker and visual artist passionate about turning raw footage into cinematic experiences that move people.</p>
+            <p>With expertise spanning <strong>video editing, VFX, motion graphics, 3D and 2D artistry</strong>, I bring a multi-disciplinary approach to every project — whether it's a short film, commercial production, or a visual experiment.</p>
+            <p>My work sits at the intersection of cinema and digital design — where technical precision meets a distinct, intentional visual voice.</p>
+        </div>
+        <div class="about-stats reveal d1">
+            <div class="stat-box"><div class="stat-num">3+</div><div class="stat-label">Years Experience</div></div>
+            <div class="stat-box"><div class="stat-num">50+</div><div class="stat-label">Projects Delivered</div></div>
+            <div class="stat-box"><div class="stat-num">5</div><div class="stat-label">Core Disciplines</div></div>
+            <div class="stat-box"><div class="stat-num">∞</div><div class="stat-label">Stories to Tell</div></div>
+        </div>
+    </div>
+
+    <div class="skills-column reveal d2">
+        <div class="section-eyebrow" style="margin-bottom:2rem;"><span>Skills</span></div>
+        <div class="skill-row">
+            <div class="skill-meta"><span class="skill-name">Video Editing</span><span class="skill-pct">95%</span></div>
+            <div class="skill-track"><div class="skill-fill" data-w="95"></div></div>
+        </div>
+        <div class="skill-row">
+            <div class="skill-meta"><span class="skill-name">Color Grading</span><span class="skill-pct">90%</span></div>
+            <div class="skill-track"><div class="skill-fill" data-w="90"></div></div>
+        </div>
+        <div class="skill-row">
+            <div class="skill-meta"><span class="skill-name">VFX & Compositing</span><span class="skill-pct">88%</span></div>
+            <div class="skill-track"><div class="skill-fill" data-w="88"></div></div>
+        </div>
+        <div class="skill-row">
+            <div class="skill-meta"><span class="skill-name">Motion Graphics</span><span class="skill-pct">85%</span></div>
+            <div class="skill-track"><div class="skill-fill" data-w="85"></div></div>
+        </div>
+        <div class="skill-row">
+            <div class="skill-meta"><span class="skill-name">2D Illustration</span><span class="skill-pct">80%</span></div>
+            <div class="skill-track"><div class="skill-fill" data-w="80"></div></div>
+        </div>
+        <div class="skill-row">
+            <div class="skill-meta"><span class="skill-name">3D Artistry</span><span class="skill-pct">78%</span></div>
+            <div class="skill-track"><div class="skill-fill" data-w="78"></div></div>
+        </div>
+        <div class="skill-row">
+            <div class="skill-meta"><span class="skill-name">Cinematic Direction</span><span class="skill-pct">82%</span></div>
+            <div class="skill-track"><div class="skill-fill" data-w="82"></div></div>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== SERVICES ==================== -->
+<section id="services">
+    <div class="section-eyebrow reveal"><span>What I Do</span></div>
+    <h2 class="section-heading reveal">Services</h2>
+    <div class="services-grid">
+        <div class="service-card reveal">
+            <span class="service-icon">🎬</span>
+            <div class="service-title">Video Editing</div>
+            <div class="service-desc">Precision cuts, rhythm-driven pacing, and narrative flow. From raw footage to a polished final cut that tells your story exactly right.</div>
+        </div>
+        <div class="service-card reveal d1">
+            <span class="service-icon">📽️</span>
+            <div class="service-title">Cinematic Shoots</div>
+            <div class="service-desc">Direction, framing, and cinematography for short films, brand films, music videos, and creative projects with a high-end visual language.</div>
+        </div>
+        <div class="service-card reveal d2">
+            <span class="service-icon">✨</span>
+            <div class="service-title">VFX & Motion Graphics</div>
+            <div class="service-desc">Visual effects, compositing, particle systems, and motion design — adding dimension and dynamism to your footage.</div>
+        </div>
+        <div class="service-card reveal d3">
+            <span class="service-icon">🎨</span>
+            <div class="service-title">Graphic Design</div>
+            <div class="service-desc">Branding, poster design, digital illustration, and 2D/3D artwork. Visual identity crafted with intention and aesthetic precision.</div>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== CONTACT ==================== -->
+<section id="contact">
+    <div class="contact-info">
+        <div class="section-eyebrow reveal"><span>Get In Touch</span></div>
+        <h2 class="section-heading contact-headline reveal">Let's Create<br>Something<br>Cinematic</h2>
+        <p class="contact-intro reveal">Available for freelance projects, collaborations, and creative partnerships. If you have a vision — let's bring it to life together.</p>
+
+        <div class="contact-items reveal d1">
+            <div class="contact-row">
+                <div class="contact-icon">✉</div>
+                <div class="contact-detail"><a href="mailto:rohankshirsagar534@gmail.com">rohankshirsagar534@gmail.com</a></div>
+            </div>
+            <div class="contact-row">
+                <div class="contact-icon">📞</div>
+                <div class="contact-detail"><a href="tel:+918262891617">+91 82628 91617</a></div>
+            </div>
+            <div class="contact-row">
+                <div class="contact-icon">💬</div>
+                <div class="contact-detail"><a href="https://wa.me/918262891617" target="_blank" rel="noopener">WhatsApp — Quick Chat</a></div>
+            </div>
+        </div>
+
+        <div class="social-row reveal d2">
+            <a href="https://www.linkedin.com/in/rohan-kshirsagar-64793b332" target="_blank" rel="noopener" class="social-btn" title="LinkedIn">Li</a>
+            <a href="https://instagram.com/rohhann02" target="_blank" rel="noopener" class="social-btn" title="Instagram">Ig</a>
+            <a href="https://github.com/rohankshirsagar534-web" target="_blank" rel="noopener" class="social-btn" title="GitHub">Gh</a>
+        </div>
+    </div>
+
+    <div class="reveal d1">
+        <form class="contact-form" id="contactForm" novalidate>
+            <div class="field">
+                <label>Your Name</label>
+                <input type="text" placeholder="Priya Sharma" required>
+            </div>
+            <div class="field">
+                <label>Email Address</label>
+                <input type="email" placeholder="hello@yourbrand.com" required>
+            </div>
+            <div class="field">
+                <label>Your Message</label>
+                <textarea placeholder="Tell me about your project, timeline, and vision..." required></textarea>
+            </div>
+            <button type="submit" class="btn-primary">Send Message →</button>
+            <div class="form-feedback" id="formFeedback">✓ Message received! I'll get back to you within 24 hours.</div>
+        </form>
+    </div>
+</section>
+
+<!-- ==================== FOOTER ==================== -->
+<footer>
+    <p>© 2025 <span>Rohan Kshirsagar</span>. All rights reserved.</p>
+    <p>Filmmaker <span>•</span> VFX Artist <span>•</span> Visual Storyteller</p>
+</footer>
+
+<!-- ==================== SCRIPTS ==================== -->
+<script>
+/* ---- CUSTOM CURSOR ---- */
+const dot  = document.getElementById('cursorDot');
+const ring = document.getElementById('cursorRing');
+let mx = 0, my = 0, rx = 0, ry = 0;
+
+document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    dot.style.left = mx + 'px';
+    dot.style.top  = my + 'px';
+});
+(function trackRing() {
+    rx += (mx - rx) * 0.11;
+    ry += (my - ry) * 0.11;
+    ring.style.left = rx + 'px';
+    ring.style.top  = ry + 'px';
+    requestAnimationFrame(trackRing);
+})();
+document.querySelectorAll('a, button, .project-card, .service-card').forEach(el => {
+    el.addEventListener('mouseenter', () => ring.classList.add('hovered'));
+    el.addEventListener('mouseleave', () => ring.classList.remove('hovered'));
+});
+
+/* ---- NAV SCROLL ---- */
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 60);
+}, { passive: true });
+
+/* ---- MOBILE NAV ---- */
+const toggle   = document.getElementById('navToggle');
+const navLinks = document.getElementById('navLinks');
+toggle.addEventListener('click', () => {
+    navLinks.classList.toggle('open');
+    toggle.classList.toggle('open');
+});
+navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    navLinks.classList.remove('open');
+    toggle.classList.remove('open');
+}));
+
+/* ---- HERO PARALLAX ---- */
+const heroBg = document.getElementById('heroBg');
+window.addEventListener('scroll', () => {
+    if (window.scrollY < window.innerHeight) {
+        heroBg.style.transform = `translateY(${window.scrollY * 0.28}px)`;
+    }
+}, { passive: true });
+
+/* ---- SCROLL REVEAL ---- */
+const revealEls = document.querySelectorAll('.reveal');
+const revealObs = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('in-view');
+            revealObs.unobserve(entry.target);
+        }
+    });
+}, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+revealEls.forEach(el => revealObs.observe(el));
+
+/* ---- SKILL BARS ---- */
+const skillFills = document.querySelectorAll('.skill-fill');
+const skillObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+        if (e.isIntersecting) {
+            e.target.style.width = e.target.dataset.w + '%';
+            skillObs.unobserve(e.target);
+        }
+    });
+}, { threshold: 0.3 });
+skillFills.forEach(f => skillObs.observe(f));
+
+/* ---- CONTACT FORM ---- */
+document.getElementById('contactForm').addEventListener('submit', e => {
+    e.preventDefault();
+    const fb = document.getElementById('formFeedback');
+    fb.style.display = 'block';
+    e.target.reset();
+    setTimeout(() => { fb.style.display = 'none'; }, 5500);
+});
+
+/* ================================================================
+   CAMERA LENS CANVAS ANIMATION
+================================================================ */
+const canvas = document.getElementById('lensCanvas');
+if (canvas) {
+    const ctx = canvas.getContext('2d');
+    const W = canvas.width, H = canvas.height;
+    const cx = W / 2, cy = H / 2, R = 168;
+    let t = 0;
+
+    function drawFrame(time) {
+        ctx.clearRect(0, 0, W, H);
+        const floatY = Math.sin(time * 0.38) * 11;
+
+        ctx.save();
+        ctx.translate(0, floatY);
+
+        /* --- ambient halo --- */
+        const halo = ctx.createRadialGradient(cx, cy, R * 0.7, cx, cy, R * 1.55);
+        halo.addColorStop(0, 'rgba(255,107,53,0.09)');
+        halo.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.beginPath();
+        ctx.arc(cx, cy, R * 1.55, 0, Math.PI * 2);
+        ctx.fillStyle = halo;
+        ctx.fill();
+
+        /* --- outer glow ring --- */
+        ctx.beginPath();
+        ctx.arc(cx, cy, R, 0, Math.PI * 2);
+        ctx.shadowBlur = 22;
+        ctx.shadowColor = 'rgba(255,107,53,0.55)';
+        ctx.strokeStyle = 'rgba(255,107,53,0.88)';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+
+        /* --- inner edge of outer ring --- */
+        ctx.beginPath();
+        ctx.arc(cx, cy, R - 9, 0, Math.PI * 2);
+        ctx.strokeStyle = 'rgba(255,255,255,0.07)';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        /* --- rotating tick marks --- */
+        const ticks = 54;
+        for (let i = 0; i < ticks; i++) {
+            const angle = (i / ticks) * Math.PI * 2 + time * 0.075;
+            const major = i % 6 === 0;
+            const inner = R - (major ? 16 : 8);
+            ctx.beginPath();
+            ctx.moveTo(cx + Math.cos(angle) * R, cy + Math.sin(angle) * R);
+            ctx.lineTo(cx + Math.cos(angle) * inner, cy + Math.sin(angle) * inner);
+            ctx.strokeStyle = major ? 'rgba(255,107,53,0.92)' : 'rgba(255,107,53,0.32)';
+            ctx.lineWidth = major ? 2 : 1;
+            ctx.stroke();
+        }
+
+        /* --- mid ring --- */
+        ctx.beginPath();
+        ctx.arc(cx, cy, R * 0.73, 0, Math.PI * 2);
+        ctx.strokeStyle = 'rgba(217,217,217,0.13)';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        /* --- dashed counter-rotating ring --- */
+        ctx.beginPath();
+        ctx.arc(cx, cy, R * 0.59, 0, Math.PI * 2);
+        ctx.setLineDash([7, 11]);
+        ctx.lineDashOffset = -time * 16;
+        ctx.strokeStyle = 'rgba(255,107,53,0.22)';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        /* --- glass interior --- */
+        const glass = ctx.createRadialGradient(cx - R * 0.08, cy - R * 0.08, 0, cx, cy, R * 0.53);
+        glass.addColorStop(0, 'rgba(48,48,58,0.92)');
+        glass.addColorStop(0.55, 'rgba(22,22,28,0.96)');
+        glass.addColorStop(1, 'rgba(6,6,10,0.99)');
+        ctx.beginPath();
+        ctx.arc(cx, cy, R * 0.53, 0, Math.PI * 2);
+        ctx.fillStyle = glass;
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        /* --- slowly-rotating crosshairs --- */
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.rotate(time * 0.035);
+        const cLen = R * 0.46;
+        ctx.beginPath();
+        ctx.moveTo(-cLen, 0); ctx.lineTo(cLen, 0);
+        ctx.moveTo(0, -cLen); ctx.lineTo(0, cLen);
+        ctx.strokeStyle = 'rgba(255,107,53,0.11)';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+        ctx.rotate(Math.PI / 4);
+        const dLen = R * 0.3;
+        ctx.beginPath();
+        ctx.moveTo(-dLen, 0); ctx.lineTo(dLen, 0);
+        ctx.moveTo(0, -dLen); ctx.lineTo(0, dLen);
+        ctx.strokeStyle = 'rgba(255,107,53,0.055)';
+        ctx.stroke();
+        ctx.restore();
+
+        /* --- inner rings --- */
+        [0.36, 0.22].forEach((r, i) => {
+            ctx.beginPath();
+            ctx.arc(cx, cy, R * r, 0, Math.PI * 2);
+            ctx.strokeStyle = i === 0 ? 'rgba(255,255,255,0.07)' : 'rgba(255,107,53,0.18)';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+        });
+
+        /* --- primary specular highlight --- */
+        const spec1 = ctx.createRadialGradient(cx - R * 0.18, cy - R * 0.18, 0, cx - R * 0.18, cy - R * 0.18, R * 0.25);
+        spec1.addColorStop(0, 'rgba(255,255,255,0.13)');
+        spec1.addColorStop(1, 'rgba(255,255,255,0)');
+        ctx.beginPath();
+        ctx.arc(cx - R * 0.18, cy - R * 0.18, R * 0.25, 0, Math.PI * 2);
+        ctx.fillStyle = spec1;
+        ctx.fill();
+
+        /* --- secondary specular --- */
+        const spec2 = ctx.createRadialGradient(cx + R * 0.26, cy + R * 0.24, 0, cx + R * 0.26, cy + R * 0.24, R * 0.09);
+        spec2.addColorStop(0, 'rgba(255,255,255,0.07)');
+        spec2.addColorStop(1, 'rgba(255,255,255,0)');
+        ctx.beginPath();
+        ctx.arc(cx + R * 0.26, cy + R * 0.24, R * 0.09, 0, Math.PI * 2);
+        ctx.fillStyle = spec2;
+        ctx.fill();
+
+        /* --- glowing center dot --- */
+        ctx.beginPath();
+        ctx.arc(cx, cy, 5.5, 0, Math.PI * 2);
+        ctx.shadowBlur = 18;
+        ctx.shadowColor = '#FF6B35';
+        ctx.fillStyle = '#FF6B35';
+        ctx.fill();
+        ctx.shadowBlur = 0;
+
+        ctx.beginPath();
+        ctx.arc(cx, cy, 13, 0, Math.PI * 2);
+        ctx.strokeStyle = 'rgba(255,107,53,0.38)';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        ctx.restore();
+    }
+
+    (function loop() {
+        t += 0.016;
+        drawFrame(t);
+        requestAnimationFrame(loop);
+    })();
+}
+</script>
+</body>
+</html>
